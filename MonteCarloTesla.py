@@ -56,8 +56,7 @@ var_price = last_price * (1 + pctile)
 #print(f"VaR ({int(conf_level*100)}%) = {var_pct:.2%} loss -> about ${var_abs:.2f} on ${last_price:.2f}")
 
 print(f"VaR ({int(conf_level*100)}%) = {var_pct:.2%} loss") #value at risk percentage
-print(f"VaR price level = ${var_price:.2f}  (i.e. about ${var_dollar_loss:.2f} loss from ${last_price:.2f})") #actual 5th percentile price
-
+print(f"VaR price level = ${var_price:.2f}  (about ${var_dollar_loss:.2f} loss from ${last_price:.2f})") #actual 5th percentile price
 
 #plot the simulations
 plt.figure(figsize=(10,6))
@@ -72,6 +71,14 @@ plt.legend()
 plt.show()
 
 print("Last Actual Price: ${:.2f}".format(last_price))
-print("Expected Final Price after {} days: ${:.2f}".format(forecast_days, expected_final_price))
 print("Expected Return Percentage: {:.2f}%".format(expected_return_pct))
 print("Probability of Profit: {:.2f}%".format(prob_profit * 100))
+
+#95% confidence interval for expected final price
+std_dev = np.std(final_prices) #standard deviation of final prices
+std_error = std_dev / np.sqrt(sims) #uncertainty in the mean
+ci_low = expected_final_price - 1.96 * std_error #low end of 95% CI
+ci_high = expected_final_price + 1.96 * std_error#high end of 95% CI
+
+print(f"95% Confidence Interval for Expected Final Price: ${ci_low:.2f} to ${ci_high:.2f}")
+print("Expected Final Price after {} days: ${:.2f}".format(forecast_days, expected_final_price))
